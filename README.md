@@ -38,7 +38,7 @@ slicer --datasets </path/to/dataset1,/path/to/dataset2...> --output_dir <prefix 
 
 To run DOMINO:
 ```
-domino --active_genes_files </path/to/dataset1,/path/to/dataset2...> --network_file </path/to/network.sif> --slices_file <slices_file.txt> [--sth <slices_threshold> --mth <putative_modules_threshold>]
+domino --active_genes_files </path/to/dataset1,/path/to/dataset2...> --network_file </path/to/network.sif> --slices_file <slices_file.txt> --output_folder </path/to/output_folder> [--sth <slices_threshold> --mth <putative_modules_threshold>]
 ```
 
 The common command line options are:
@@ -47,8 +47,12 @@ The common command line options are:
 
 `-n/--network_file`: path to network file (sif format).
 
+`-s/--slices_file`: path to slices file (i.e. the output of "slicer" script).
+
 
 ## Main output files
+
+`output_folder/active_gene_file_name.out`: list of final modules
 
 ## Advanced usage
 
