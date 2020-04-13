@@ -20,7 +20,7 @@ source domino-env/bin/activate
 ```
 To install, download and run setup.py:
 ```
-    git clone https://github.com/hag007/domino.git
+    git clone https://github.com/Shamir-Lab/domino.git
     cd DOMINO
     python setup.py install
 ```
