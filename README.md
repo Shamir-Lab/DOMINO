@@ -2,6 +2,15 @@
 
 DOMINO: Discovery of Modules In Networks using Omic.
 
+DOMINO is a network-based module discovery (NBMD) algorithm.  It recieves a gene network and nodes’ activity scores as input and report sub-networks (modules) that are putatively biologically meaningful in the context of the activity data.
+
+
+In extensive evaluation conducted on gene expression and genome-wide association study data we discovered that NBMD algorithms tended to over-reporting of enrichment: GO terms enriched in the modules on real data were often also enriched when the algorithms were run on randomly permuted activity scores.
+
+In constrast, modules retrieved by DOMINO had high rate of empirically validated GO terms.
+
+A preprint version of the study is available at https://www.biorxiv.org/content/10.1101/2020.03.10.984963v3.
+
 - [Installation](#installation)
 - [Basic Usage](#basic-usage)
 - [Main output files](#main-output-files)
