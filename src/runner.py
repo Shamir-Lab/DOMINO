@@ -30,7 +30,7 @@ def main_domino():
 def main_slicer():
 
     parser = argparse.ArgumentParser(description='args')
-    parser.add_argument('-n', '--network_file', dest='network_file', help='/path/to/network', default="/media/hag007/Data/bnet/networks/dip.sif")
+    parser.add_argument('-n', '--network_file', dest='network_file', help='/path/to/network', default="/media/hag007/Data/bnet/networks/dip_reduced.sif")
     parser.add_argument('-o', '--output_file', dest='output_file', default="/media/hag007/Data/bnet/networks/dip_sliced.sif", help='/path/to/output')
 
 

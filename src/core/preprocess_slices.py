@@ -13,14 +13,12 @@ def create_slices(network_file, output_file_name):
     print("after removing orphans - number of edges: {}, nodes: {}".format(len(G.edges),
                                                                                     len(G.nodes)))
 
-    reached_optimal_modularity = False
     optimized_connected_components = girvan_newman(G)
-    optimal_components=[]
     n_modules=[]
     n_large_modules=[]
     modularity_scores=[]
     optimal_modularity=-1
-    while not reached_optimal_modularity:
+    while True:
 
         try:
             cur_components = sorted(next(optimized_connected_components))
@@ -28,31 +26,34 @@ def create_slices(network_file, output_file_name):
             break
 
         cur_modularity = modularity(G, cur_components, weight='weight')
-        if cur_modularity > optimal_modularity or True:
-            optimal_modularity = cur_modularity
-            optimal_components = cur_components
+        if cur_modularity < optimal_modularity:
+            break
 
-            edges_to_remove = []
-            for cur_edge in G.edges:
-                included = False
-                for cur_cc in optimal_components:
-                    if cur_edge[0] in cur_cc and cur_edge[1] in cur_cc:
-                        included = True
-                if not included:
-                    edges_to_remove.append(cur_edge)
+        print("cur_modularity: {}".format(cur_modularity))
+        optimal_modularity = cur_modularity
+        optimal_components = cur_components
 
-            G.remove_edges_from(edges_to_remove)
+        edges_to_remove = []
+        for cur_edge in G.edges:
+            included = False
+            for cur_cc in optimal_components:
+                if cur_edge[0] in cur_cc and cur_edge[1] in cur_cc:
+                    included = True
+            if not included:
+                edges_to_remove.append(cur_edge)
 
-            n_modules.append(len(cur_components))
-            n_large_modules.append(len([a for a in cur_components if len(a) > 3]))
-            modularity_scores.append(optimal_modularity)
-            print("new: ", len(cur_components), len([a for a in cur_components if len(a) > 3]), optimal_modularity)
+        G.remove_edges_from(edges_to_remove)
+
+    n_modules.append(len(cur_components))
+    n_large_modules.append(len([a for a in cur_components if len(a) > 3]))
+    modularity_scores.append(optimal_modularity)
 
 
-        with open(output_file_name, 'w+') as f:
-            f.write(str(n_modules)+"\n")
-            f.write(str(n_large_modules)+"\n")
-            f.write(str([a*100 for a in modularity_scores])+"\n")
+    with open(output_file_name, 'w+') as f:
+        f.write("# of cc after modularity optimization: {}\n".format(n_modules[-1]))
+        for i, m in enumerate([a for a in cur_components if len(a) > 3]):
+            f.write("cc #{}: n={}\n".format(i, len(m)))
+            f.write(str(m)+"\n")
 
     print("modularity: ", modularity(G, list([G.subgraph(c) for c in connected_components(G)]), weight='weight'))
 
