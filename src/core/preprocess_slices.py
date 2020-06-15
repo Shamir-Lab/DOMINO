@@ -8,8 +8,8 @@ from src.core.network_builder import build_network
 
 def create_slices(network_file, output_file_name):
     G = build_network(network_file)
-    # G.remove_nodes_from(list(nx.isolates(G)))
-    # print("after removing orphans - number of edges: {}, nodes: {}".format(len(G.edges), len(G.nodes)))
+    G.remove_nodes_from(list(nx.isolates(G)))
+    print("after removing orphans - number of edges: {}, nodes: {}".format(len(G.edges), len(G.nodes)))
 
     optimized_connected_components = girvan_newman(G)
     n_modules=[]
