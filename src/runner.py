@@ -8,7 +8,7 @@ def main_domino():
     parser.add_argument('-a', '--active_genes_files', dest='active_genes_files', help='/path/to/active_genes_files_1,/path/to/active_genes_files_2', default="/media/hag007/Data/bnet/datasets/GE_HC12/output/ge_list.txt")
     parser.add_argument('-o', '--output_folder', dest='output_folder', help='/path/to/output', default="/media/hag007/Data/domino_test/out_test/")
     parser.add_argument('-n', '--network_file', dest='network_file', help='/path/to/network file', default="/media/hag007/Data/emp_test/networks/dip.sif")
-    parser.add_argument('-s', '--slices_file', dest='slices_file', help='/path/to/slices file', default="/media/hag007/Data/bnet/networks/dip_sliced.txt")
+    parser.add_argument('-s', '--slices_file', dest='slices_file', help='/path/to/slices file', default="/media/hag007/Data/bnet/networks/dip_ng_modularity_components.txt")
     parser.add_argument('-sth', '--slice_threshold', dest='slice_threshold', default="0.3", help='threshold of slices')
     parser.add_argument('-mth', '--module_threshold', dest='module_threshold', default="0.05", help='threshold of putative modules')
 

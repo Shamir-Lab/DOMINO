@@ -8,8 +8,8 @@ from src.core.network_builder import build_network
 
 def create_slices(network_file, output_file_name):
     G = build_network(network_file)
-    G.remove_nodes_from(list(nx.isolates(G)))
-    print("after removing orphans - number of edges: {}, nodes: {}".format(len(G.edges), len(G.nodes)))
+    # G.remove_nodes_from(list(nx.isolates(G)))
+    # print("after removing orphans - number of edges: {}, nodes: {}".format(len(G.edges), len(G.nodes)))
 
     optimized_connected_components = girvan_newman(G)
     n_modules=[]
@@ -24,7 +24,7 @@ def create_slices(network_file, output_file_name):
             break
 
         cur_modularity = modularity(G, cur_components, weight='weight')
-        if cur_modularity < optimal_modularity:
+        if cur_modularity < optimal_modularity+0.001:
             break
 
         print("cur_modularity: {}".format(cur_modularity))
@@ -42,19 +42,19 @@ def create_slices(network_file, output_file_name):
 
         G.remove_edges_from(edges_to_remove)
 
-    n_modules.append(len(cur_components))
-    n_large_modules.append(len([a for a in cur_components if len(a) > 3]))
-    modularity_scores.append(optimal_modularity)
+        n_modules.append(len(cur_components))
+        n_large_modules.append(len([a for a in cur_components if len(a) > 3]))
+        modularity_scores.append(optimal_modularity)
 
 
-    with open(output_file_name, 'w+') as f:
-        f.write("# of cc after modularity optimization: {}\n".format(n_modules[-1]))
-        for i, m in enumerate([a for a in cur_components if len(a) > 3]):
-            f.write("cc #{}: n={}\n".format(i, len(m)))
-            f.write(str(list(m))+"\n")
+        with open(output_file_name, 'w+') as f:
+            f.write("# of cc after modularity optimization: {}\n".format(n_modules[-1]))
+            for i, m in enumerate([a for a in cur_components if len(a) > 3]):
+                f.write("cc #{}: n={}\n".format(i, len(m)))
+                f.write(str(list(m))+"\n")
 
 
-    print("modularity: ", modularity(G, list([G.subgraph(c) for c in connected_components(G)]), weight='weight'))
+        print("modularity: ", modularity(G, list([G.subgraph(c) for c in connected_components(G)]), weight='weight'))
 
 
 def read_preprocessed_slices(file_path):
