@@ -51,7 +51,7 @@ def create_slices(network_file, output_file_name):
             f.write("# of cc after modularity optimization: {}\n".format(n_modules[-1]))
             for i, m in enumerate([a for a in cur_components if len(a) > 3]):
                 f.write("cc #{}: n={}\n".format(i, len(m)))
-                f.write(str(list(m))+"\n")
+                f.write('[%s]' % ', '.join(m)+"\n")
 
 
         print("modularity: ", modularity(G, list([G.subgraph(c) for c in connected_components(G)]), weight='weight'))

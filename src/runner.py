@@ -5,10 +5,10 @@ from src.core.preprocess_slices import create_slices
 def main_domino():
 
     parser = argparse.ArgumentParser(description='args')
-    parser.add_argument('-a', '--active_genes_files', dest='active_genes_files', help='/path/to/active_genes_files_1,/path/to/active_genes_files_2', default="/media/hag007/Data/bnet/datasets/GE_HC12/output/ge_list.txt")
+    parser.add_argument('-a', '--active_genes_files', dest='active_genes_files', help='/path/to/active_genes_files_1,/path/to/active_genes_files_2', default="/home/hag007/Desktop/network/mod.txt")
     parser.add_argument('-o', '--output_folder', dest='output_folder', help='/path/to/output', default="/media/hag007/Data/domino_test/out_test/")
-    parser.add_argument('-n', '--network_file', dest='network_file', help='/path/to/network file', default="/media/hag007/Data/emp_test/networks/dip.sif")
-    parser.add_argument('-s', '--slices_file', dest='slices_file', help='/path/to/slices file', default="/media/hag007/Data/bnet/networks/dip_ng_modularity_components.txt")
+    parser.add_argument('-n', '--network_file', dest='network_file', help='/path/to/network file', default="/home/hag007/Desktop/network/dip_mouse.sif")
+    parser.add_argument('-s', '--slices_file', dest='slices_file', help='/path/to/slices file', default="/home/hag007/Desktop/network/dip_mouse_sliced.txt")
     parser.add_argument('-sth', '--slice_threshold', dest='slice_threshold', default="0.3", help='threshold of slices')
     parser.add_argument('-mth', '--module_threshold', dest='module_threshold', default="0.05", help='threshold of putative modules')
 
@@ -24,7 +24,7 @@ def main_domino():
     for cur_ag in active_genes_files:
         final_modules=domino_main(active_genes_file=cur_ag, network_file=network_file, slices_file=slices_file, slice_threshold=slice_threshold, module_threshold=module_threshold)
         out_file=os.path.join(output_folder, os.path.splitext(os.path.split(cur_ag)[-1])[0]+ ".out")
-        open(out_file, 'w+').write(str(final_modules))
+        open(out_file, 'w+').write("\n".join(['[%s]' % ', '.join(m) for m in final_modules]))
         print(f'{len(final_modules)} final modules are reported at {out_file}')
 
 def main_slicer():
