@@ -26,6 +26,8 @@ setup(
         'pandas==1.0.1',
         'pcst-fast==1.0.7',
         'statsmodels==0.11.0'],
+    package_data = {'src':['data/*']},
+    include_package_data=True,
     entry_points = {
         "console_scripts": [
             "domino=src.runner:main_domino",

@@ -2,7 +2,6 @@ import os
 import random
 
 def format_script(file_path, uid=True, **kwargs):
-    print("file_path: "+ file_path)
     formatted_script = open(file_path+".format").read().format(**kwargs)
     if uid:
         exec_file_name="{}_{}{}".format(os.path.splitext(file_path)[0] ,random.random(), os.path.splitext(file_path)[1]) #
