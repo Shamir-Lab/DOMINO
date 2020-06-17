@@ -61,7 +61,8 @@ The common command line options are:
 
 ## Main output files
 
-`output_folder/active_gene_file_name.out`: list of final modules
+`output_folder/active_gene_file_name/modules.out`: list of final modules
+`output_folder/active_gene_file_name/module_i.html`: visualization of the i'th module
 
 ## Advanced usage
 
