@@ -24,7 +24,7 @@ def create_slices(network_file, output_file_name):
             break
 
         cur_modularity = modularity(G, cur_components, weight='weight')
-        if cur_modularity < optimal_modularity+0.001:
+        if cur_modularity < optimal_modularity:
             break
 
         print("cur_modularity: {}".format(cur_modularity))

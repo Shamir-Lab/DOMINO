@@ -4,7 +4,7 @@ import pandas as pd
 
 def build_network(network_file):
     """"""
-    edges_dataset = pd.read_csv(network_file, sep='\t', header=None)
+    edges_dataset = pd.read_csv(network_file, sep='\t', header=None, dtype=str)
     edges = []
     for ind, row in edges_dataset.iterrows():
         # if row.iloc[0]!=row.iloc[2]:

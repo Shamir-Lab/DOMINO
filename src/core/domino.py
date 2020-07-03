@@ -6,6 +6,7 @@ import os
 
 import pandas as pd
 import numpy as np
+import pickle
 import matplotlib
 matplotlib.use("Agg")
 from scipy.stats import hypergeom
@@ -24,7 +25,7 @@ from src.core.network_builder import build_network
 
 def extract_scores(scores_file):
     """"""
-    scores = pd.read_csv(scores_file, sep='\t', index_col=0, header=None)
+    scores = pd.read_csv(scores_file, sep='\t', index_col=0, header=None, dtype=str)
     if "pval" in scores.columns:
         scores["score"] = scores["pval"]
     else:
@@ -46,19 +47,26 @@ def add_scores_to_nodes(G, scores):
 
     return G
 
-def prune_network_by_modularity(G, modules):
+def prune_network_by_modularity(G, modules, cache_file):
+    if os.path.exists(cache_file):
+        return pickle.load(open(cache_file, 'rb'))
+
     G_modularity=G.copy()
+    print(f"Before slicing: n of cc:{len(list(connected_components(G_modularity)))}, n of nodes: {len(G_modularity.nodes)}, n of edges, {len(G_modularity.edges)}")
     edges_to_remove=[]
     for cur_edge in G_modularity.copy().edges:
         in_cc = False
+        # print(f'cur edge: {cur_edge}')
         for cur_module in modules:
+            # print(f'cur modules: {cur_module}\ncur edge: {cur_edge}')
             if cur_edge[0] in cur_module and cur_edge[1] in cur_module:
                 in_cc=True
         if not in_cc:
             edges_to_remove.append(cur_edge)
 
     G_modularity.remove_edges_from(edges_to_remove)
-
+    print(f"After slicing: n of cc:{len(list(connected_components(G_modularity)))}, n of nodes: {len(G_modularity.nodes)}, n of edges, {len(G_modularity.edges)}")
+    pickle.dump(G, open(cache_file, 'wb+'))  
     return G_modularity
 
 def get_pcst_prize(G_cc, prize_factor, n_steps):
@@ -128,16 +136,16 @@ def split_subslice_into_putative_modules(G_optimized, improvement_delta, modular
     n_nodes=list(G_optimized.nodes)
     cur_components = [G_optimized.subgraph(c) for c in connected_components(G_optimized)]
     cur_modularity = modularity(G_optimized, cur_components, weight='weight')
-    # print("cur_modularity: {}".format(cur_modularity))
+    print("cur_modularity: {}".format(cur_modularity))
     if cur_modularity >= modularity_score_objective:
         return True, best_modularity
 
         if len(n_nodes) < 4:
             G_optimized.remove_nodes_from(n_nodes)
-    # print("after optimizing for sig modules - number of edges: {}, nodes: {}".format(len(G_optimized.edges),
-    #                                                                                  len(G_optimized.nodes)))
+    print("after optimizing for sig modules - number of edges: {}, nodes: {}".format(len(G_optimized.edges),
+                                                                                     len(G_optimized.nodes)))
     cur_components = [G_optimized.subgraph(c) for c in connected_components(G_optimized)]
-    # print("number of cc: ", len(cur_components))
+    print("number of cc: ", len(cur_components))
     if len(cur_components) == 0:
         return True, best_modularity
 
@@ -215,14 +223,18 @@ def retain_relevant_slices(G_original, G_modularity, module_sig_th):
     large_modules=[]
     G_optimized=G_modularity.copy()
     perturbation_factor = np.log2(len([n for n in G_original.nodes if G_original.nodes[n]['pertubed_node']]))
-    for cur_cc in ccs:
+    print ('# of CC before PF filter: {len(ccs)}')
+    for i_cur_cc, cur_cc in enumerate(ccs):
 
         pertubed_nodes_in_cc = [cur_node for cur_node in cur_cc if G_modularity.nodes[cur_node]["pertubed_node"]]
-        if len(cur_cc) < 4 or not (len(pertubed_nodes_in_cc) > perturbation_factor or len(pertubed_nodes_in_cc)/float(len(cur_cc))>=0.2) :
+        print(f'{len(pertubed_nodes_in_cc)}> {perturbation_factor} or {len(pertubed_nodes_in_cc)}/{float(len(cur_cc))}>={0.2}')
+        if len(cur_cc) < 4 or len(pertubed_nodes_in_cc)> perturbation_factor or len(pertubed_nodes_in_cc)/float(len(cur_cc))>=0.2: # or not (len(pertubed_nodes_in_cc) > perturbation_factor or len(pertubed_nodes_in_cc)/float(len(cur_cc))>=0.2) :
+            # print(f"cc #{i_cur_cc} did not pass PF filter")
             G_optimized.remove_nodes_from(cur_cc)
         else:
+            print(f"cc #{i_cur_cc} passed PF filter")
             large_modules.append(cur_cc)
-
+            
             sig_scores.append(hypergeom.sf(len(pertubed_nodes_in_cc), len(G_original.nodes), len(pertubed_nodes),
                                            len(cur_cc)) \
                         + hypergeom.pmf(len(pertubed_nodes_in_cc), len(G_original.nodes), len(pertubed_nodes),
@@ -232,6 +244,7 @@ def retain_relevant_slices(G_original, G_modularity, module_sig_th):
                                     is_sorted=False)
 
     i=0
+    print(fdr_bh_results[1])
     for cur_cc, is_passed_th, qval in zip(large_modules, fdr_bh_results[0], fdr_bh_results[1]):
         if is_passed_th:
             passed_modules.append(list(cur_cc.nodes))
@@ -277,22 +290,28 @@ def get_final_modules(G, putative_modules):
     return [a[0] for a in module_sigs]
 
 def main(active_genes_file, network_file, slices_file=None, slice_threshold=0.3, module_threshold=0.05, prize_factor=0.7, n_steps=20, n_permutations=1000):
-
-    network_file_name = os.path.join(network_file)
-
-    G = build_network(network_file_name)
-
+    print("start running DOMINO...")
+    if os.path.exists(f'{network_file_name}.pkl'):
+        G=pickle.load(open(f'{network_file_name}.pkl', 'rb'))
+        print(f'pkl loaded: {network_file_name}.pkl')
+    else:
+        G = build_network(network_file)
+        pickle.dump(G, open(f'{network_file_name}.pkl', 'wb+'))
+        print(f'pkl saved: {network_file_name}.pkl')
+   
+    print("done building network")
     # assign activeness to nodes
     scores = extract_scores(active_genes_file)
     G = add_scores_to_nodes(G, scores)
 
     modularity_connected_components = read_preprocessed_slices(slices_file)
 
-    G_modularity=prune_network_by_modularity(G, modularity_connected_components)
+    G_modularity=prune_network_by_modularity(G, modularity_connected_components, 'f{os.path.split(network_file)[1].split(".")[0]}.{os.path.split(slices_file)[1].split(".")[0]}.pkl')
     G_modularity, relevant_slices, qvals = retain_relevant_slices(G, G_modularity, slice_threshold)
-
+    print(f'{len(relevant_slices)} relevant slices were retained')
     putative_modules = []
     for i_cc, cc in enumerate(relevant_slices):
+        print(f'analyze slicer #{i_cc+1}/{len(relevant_slices)}')
         putative_modules += analyze_slice(G, cc, i_cc, n_steps, relevant_slices, prize_factor, module_threshold, n_permutations)
 
     final_modules=get_final_modules(G, putative_modules)
