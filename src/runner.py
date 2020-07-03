@@ -3,7 +3,7 @@ import os
 from src.core.domino import main as domino_main
 from src.core.preprocess_slices import create_slices
 from src.utils.visualize_modules import visualize_modules
-
+import src.constants as constants
 def main_domino():
 
     parser = argparse.ArgumentParser(description='args')
@@ -11,6 +11,7 @@ def main_domino():
     parser.add_argument('-o', '--output_folder', dest='output_folder', help='/path/to/output', default="/media/hag007/Data/domino_test/out_test/")
     parser.add_argument('-n', '--network_file', dest='network_file', help='/path/to/network file', default="/media/hag007/Data/DOMINO_amit/network/dip.sif")
     parser.add_argument('-s', '--slices_file', dest='slices_file', help='/path/to/slices file', default="/media/hag007/Data/DOMINO_amit/network/dip_sliced.txt")
+    parser.add_argument('-c', '--use_cache', dest='use_cache', help='true', default="true")
     parser.add_argument('-sth', '--slice_threshold', dest='slice_threshold', default="0.3", help='threshold of slices')
     parser.add_argument('-mth', '--module_threshold', dest='module_threshold', default="0.05", help='threshold of putative modules')
 
@@ -22,6 +23,9 @@ def main_domino():
     slices_file = args.slices_file
     slice_threshold = float(args.slice_threshold)
     module_threshold = float(args.module_threshold)
+    use_cache = args.use_cache=="true"
+
+    constants.USE_CACHE=use_cache
 
     for cur_ag in active_genes_files:
         final_modules=domino_main(active_genes_file=cur_ag, network_file=network_file, slices_file=slices_file, slice_threshold=slice_threshold, module_threshold=module_threshold)

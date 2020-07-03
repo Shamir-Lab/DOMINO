@@ -23,8 +23,9 @@ from functools import reduce
 from src.utils.graph_influence_linear_th import linear_threshold
 from src.core.preprocess_slices import read_preprocessed_slices
 from src.core.network_builder import build_network
-import  src.constants as constants
 
+n_of_threads=int(np.ceil(multiprocessing.cpu_count()*0.9))
+USE_CACHE=False
 def extract_scores(scores_file):
     """"""
     scores = pd.read_csv(scores_file, sep='\t', index_col=0, header=None, dtype=str)
@@ -53,23 +54,23 @@ def create_subgraph(params):
     G_modularity, cur_module=params
     return G_modularity.subgraph(cur_module)
 
-def prune_network_by_modularity(G, modules, cache_file):
-    if os.path.exists(cache_file) and constants.USE_CACHE:
+def prune_network_by_modularity_new(G, modules, cache_file):
+    if os.path.exists(cache_file) and USE_CACHE:
         return pickle.load(open(cache_file, 'rb'))
 
     G_modularity=G
-    # print(f"Before slicing: n of cc:{len(list(connected_components(G_modularity)))}, n of nodes: {len(G_modularity.nodes)}, n of edges, {len(G_modularity.edges)}")
-    p=multiprocessing.Pool(constants.N_OF_THREADS)
+    print(f"Before slicing: n of cc:{len(list(connected_components(G_modularity)))}, n of nodes: {len(G_modularity.nodes)}, n of edges, {len(G_modularity.edges)}")
+    p=multiprocessing.Pool(n_of_threads)
     G_modules=p.map(create_subgraph, [(G_modularity, m) for m in modules])
     p.close()
     G_modularity=nx.algorithms.operators.union_all(G_modules)
-    # print(f"After slicing: n of cc:{len(list(connected_components(G_modularity)))}, n of nodes: {len(G_modularity.nodes)}, n of edges, {len(G_modularity.edges)}")
-    pickle.dump(G_modularity, open(cache_file, 'wb+'))
+    print(f"After slicing: n of cc:{len(list(connected_components(G_modularity)))}, n of nodes: {len(G_modularity.nodes)}, n of edges, {len(G_modularity.edges)}")
+    pickle.dump(G, open(cache_file, 'wb+'))
     return G_modularity
 
-def prune_network_by_modularity_old(G, modules,dummy):
+def prune_network_by_modularity(G, modules,dummy):
     G_modularity=G.copy()
-    # print(f"Before slicing: n of cc:{len(list(connected_components(G_modularity)))}, n of nodes: {len(G_modularity.nodes)}, n of edges, {len(G_modularity.edges)}")
+    print(f"Before slicing: n of cc:{len(list(connected_components(G_modularity)))}, n of nodes: {len(G_modularity.nodes)}, n of edges, {len(G_modularity.edges)}")
     edges_to_remove=[]
     for cur_edge in G_modularity.copy().edges:
         in_cc = False
@@ -81,7 +82,7 @@ def prune_network_by_modularity_old(G, modules,dummy):
 
     G_modularity.remove_edges_from(edges_to_remove)
     # G_modularity.remove_nodes_from(list(nx.isolates(G_modularity)))
-    # print(f"After slicing: n of cc:{len(list(connected_components(G_modularity)))}, n of nodes: {len(G_modularity.nodes)}, n of edges, {len(G_modularity.edges)}")
+    print(f"After slicing: n of cc:{len(list(connected_components(G_modularity)))}, n of nodes: {len(G_modularity.nodes)}, n of edges, {len(G_modularity.edges)}")
     return G_modularity
 
 def get_pcst_prize(G_cc, prize_factor, n_steps):
@@ -151,16 +152,16 @@ def split_subslice_into_putative_modules(G_optimized, improvement_delta, modular
     n_nodes=list(G_optimized.nodes)
     cur_components = [G_optimized.subgraph(c) for c in connected_components(G_optimized)]
     cur_modularity = modularity(G_optimized, cur_components, weight='weight')
-    # print("cur_modularity: {}".format(cur_modularity))
+    print("cur_modularity: {}".format(cur_modularity))
     if cur_modularity >= modularity_score_objective:
         return True, best_modularity
 
         if len(n_nodes) < 4:
             G_optimized.remove_nodes_from(n_nodes)
-    # print("after optimizing for sig modules - number of edges: {}, nodes: {}".format(len(G_optimized.edges),
-    #                                                                                  len(G_optimized.nodes)))
+    print("after optimizing for sig modules - number of edges: {}, nodes: {}".format(len(G_optimized.edges),
+                                                                                     len(G_optimized.nodes)))
     cur_components = [G_optimized.subgraph(c) for c in connected_components(G_optimized)]
-    # print("number of cc: ", len(cur_components))
+    print("number of cc: ", len(cur_components))
     if len(cur_components) == 0:
         return True, best_modularity
 
@@ -236,8 +237,8 @@ def retain_relevant_slices(G_original, G_modularity, module_sig_th):
     G_optimized=G_modularity.copy()
     perturbation_factor = np.log2(len([n for n in G_original.nodes if G_original.nodes[n]['pertubed_node']]))
     params=[]
-    p=multiprocessing.Pool(constants.N_OF_THREADS)
-    # print(f'n_of_ccs: {len(ccs)}')
+    p=multiprocessing.Pool(n_of_threads)
+    print(f'n_of_ccs: {len(ccs)}')
     for i_cur_cc, cur_cc in enumerate(ccs):
         params.append([G_modularity, G_optimized, G_original, cur_cc, i_cur_cc, pertubed_nodes, perturbation_factor])
 
@@ -247,7 +248,7 @@ def retain_relevant_slices(G_original, G_modularity, module_sig_th):
     fdr_bh_results = fdrcorrection0(sig_scores, alpha=module_sig_th, method='indep',
                                     is_sorted=False)
 
-    # print(fdr_bh_results[1])
+    print(fdr_bh_results[1])
     passed_modules=[cur_cc for cur_cc, is_passed_th in zip(large_modules, fdr_bh_results[0]) if is_passed_th]
     return nx.algorithms.operators.union_all(passed_modules), [list(m.nodes) for m in passed_modules], fdr_bh_results[1]
 
@@ -262,7 +263,7 @@ def pf_filter(params):
                                        len(cur_cc)) \
                           + hypergeom.pmf(len(pertubed_nodes_in_cc), len(G_original.nodes), len(pertubed_nodes),
                                           len(cur_cc))
-        # print(f'HG({len(pertubed_nodes_in_cc)}, {len(G_original.nodes)}, {len(pertubed_nodes)}, {len(cur_cc)}) = {score}')
+        print(f'HG({len(pertubed_nodes_in_cc)}, {len(G_original.nodes)}, {len(pertubed_nodes)}, {len(cur_cc)}) = {score}')
         return (cur_cc,score)
 
 
@@ -303,38 +304,38 @@ def get_final_modules(G, putative_modules):
     return [a[0] for a in module_sigs]
 
 def main(active_genes_file, network_file, slices_file=None, slice_threshold=0.3, module_threshold=0.05, prize_factor=0.7, n_steps=20, n_permutations=1000):
-    print("start running DOMINO...")
-    if os.path.exists(f'{network_file}.pkl') and constants.USE_CACHE:
-        G=pickle.load(open(f'{network_file}.pkl', 'rb'))
-        print(f'pkl loaded: {network_file}.pkl')
-    else:
-        G = build_network(network_file)
-        pickle.dump(G, open(f'{network_file}.pkl', 'wb+'))
-        print(f'pkl saved: {network_file}.pkl')
-
-    print("done building network")
-    # assign activeness to nodes
-    scores = extract_scores(active_genes_file)
-    G = add_scores_to_nodes(G, scores)
-
-    # network_file_name = os.path.join(network_file)
+    # print("start running DOMINO...")
+    # if os.path.exists(f'{network_file}.pkl') and USE_CACHE:
+    #     G=pickle.load(open(f'{network_file}.pkl', 'rb'))
+    #     print(f'pkl loaded: {network_file}.pkl')
+    # else:
+    #     G = build_network(network_file)
+    #     pickle.dump(G, open(f'{network_file}.pkl', 'wb+'))
+    #     print(f'pkl saved: {network_file}.pkl')
     #
-    # G = build_network(network_file_name)
-    #
+    # print("done building network")
     # # assign activeness to nodes
     # scores = extract_scores(active_genes_file)
     # G = add_scores_to_nodes(G, scores)
+
+    network_file_name = os.path.join(network_file)
+
+    G = build_network(network_file_name)
+
+    # assign activeness to nodes
+    scores = extract_scores(active_genes_file)
+    G = add_scores_to_nodes(G, scores)
 
     modularity_connected_components = read_preprocessed_slices(slices_file)
 
     G_modularity=prune_network_by_modularity(G, modularity_connected_components, f'{os.path.split(slices_file)[0]}/{os.path.split(network_file)[1].split(".")[0]}.{os.path.split(slices_file)[1].split(".")[0]}.pkl')
     G_modularity, relevant_slices, qvals = retain_relevant_slices(G, G_modularity, slice_threshold)
-    # print(f'{len(relevant_slices)} relevant slices were retained')
+    print(f'{len(relevant_slices)} relevant slices were retained')
     params=[]
     for i_cc, cc in enumerate(relevant_slices):
         params.append([G, cc, i_cc, n_steps, relevant_slices, prize_factor, module_threshold, n_permutations])
         # print(f'analyze slicer #{i_cc+1}/{len(relevant_slices)}')
-    p=multiprocessing.Pool(constants.N_OF_THREADS)
+    p=multiprocessing.Pool(n_of_threads)
     putative_modules = reduce(lambda a, b: a+b, p.map(analyze_slice, params),[])
     p.close()
     final_modules=get_final_modules(G, putative_modules)

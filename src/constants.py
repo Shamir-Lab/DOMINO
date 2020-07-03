@@ -1,20 +1,9 @@
-import json
 import os
-
-from matplotlib.lines import Line2D
 import numpy as np
+import multiprocessing
 
-import matplotlib as mpl
-font = {'size'   : 22}
-mpl.rc('font', **font)
-mpl.rc('xtick', labelsize=30)    # fontsize of the tick labels
-mpl.rc('ytick', labelsize=30)
-mpl.rc('axes', labelsize=22)
-mpl.rc('legend', fontsize=20)
-
-
-
-
+USE_CACHE=True
+N_OF_THREADS=int(np.ceil(multiprocessing.cpu_count()*0.9))
 dir_path = os.path.dirname(os.path.realpath(__file__))
 PATH_TO_CONF = "env/config/conf.json"
 

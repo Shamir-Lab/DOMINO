@@ -180,11 +180,16 @@ def visualize_modules(dataset_name, modules, score_file_name, network_file_name,
     manager=multiprocessing.Manager()
     modules_summary = manager.list()
 
+    params=[]
     for i, module in enumerate(modules):
-        module_report(i, module, score_file_name, network_file_name, dataset_name, modules_summary, output_base_dir)
+        params.append([i, module, score_file_name, network_file_name, dataset_name, modules_summary, output_base_dir])
+    p=multiprocessing.Pool(constants.N_OF_THREADS)
+    p.map(module_report, params)
+    p.close()
 
 
-def module_report(module_index, module, score_file_name, network_file_name, dataset_name, modules_summary, output_base_dir):
+def module_report(params):
+    module_index, module, score_file_name, network_file_name, dataset_name, modules_summary, output_base_dir=params
     print("visualize module {} for dataset {}".format(module_index, dataset_name))
 
     modules_summary_row = {SH_MODULE_NAME: module_index, SH_NUM_GENES: len(module)}
