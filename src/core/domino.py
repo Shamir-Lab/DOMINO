@@ -291,13 +291,13 @@ def get_final_modules(G, putative_modules):
 
 def main(active_genes_file, network_file, slices_file=None, slice_threshold=0.3, module_threshold=0.05, prize_factor=0.7, n_steps=20, n_permutations=1000):
     print("start running DOMINO...")
-    if os.path.exists(f'{network_file_name}.pkl'):
-        G=pickle.load(open(f'{network_file_name}.pkl', 'rb'))
-        print(f'pkl loaded: {network_file_name}.pkl')
+    if os.path.exists(f'{network_file}.pkl'):
+        G=pickle.load(open(f'{network_file}.pkl', 'rb'))
+        print(f'pkl loaded: {network_file}.pkl')
     else:
         G = build_network(network_file)
-        pickle.dump(G, open(f'{network_file_name}.pkl', 'wb+'))
-        print(f'pkl saved: {network_file_name}.pkl')
+        pickle.dump(G, open(f'{network_file}.pkl', 'wb+'))
+        print(f'pkl saved: {network_file}.pkl')
    
     print("done building network")
     # assign activeness to nodes
