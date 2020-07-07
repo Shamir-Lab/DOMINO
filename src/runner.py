@@ -14,6 +14,7 @@ def main_domino():
     parser.add_argument('-c', '--use_cache', dest='use_cache', help='true', default="true")
     parser.add_argument('-p', '--parallelization', dest='parallelization', default="1")
     parser.add_argument('-v', '--visualization', dest='visualization', default="true")
+    parser.add_argument('-sth', '--slice_threshold', dest='slice_threshold', default="0.3", help='threshold of slices')
     parser.add_argument('-mth', '--module_threshold', dest='module_threshold', default="0.05", help='threshold of putative modules')
 
 
