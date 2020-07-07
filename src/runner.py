@@ -12,7 +12,8 @@ def main_domino():
     parser.add_argument('-n', '--network_file', dest='network_file', help='/path/to/network file', default="/media/hag007/Data/DOMINO_amit/network/dip.sif")
     parser.add_argument('-s', '--slices_file', dest='slices_file', help='/path/to/slices file', default="/media/hag007/Data/DOMINO_amit/network/dip_sliced.txt")
     parser.add_argument('-c', '--use_cache', dest='use_cache', help='true', default="true")
-    parser.add_argument('-sth', '--slice_threshold', dest='slice_threshold', default="0.3", help='threshold of slices')
+    parser.add_argument('-p', '--parallelization', dest='parallelization', default="1")
+    parser.add_argument('-v', '--visualization', dest='visualization', default="true")
     parser.add_argument('-mth', '--module_threshold', dest='module_threshold', default="0.05", help='threshold of putative modules')
 
 
@@ -24,7 +25,10 @@ def main_domino():
     slice_threshold = float(args.slice_threshold)
     module_threshold = float(args.module_threshold)
     use_cache = args.use_cache=="true"
+    parallelization = int(args.parallelization)
+    visualization = args.visualization=="true"
 
+    constants.N_OF_THREADS=parallelization
     constants.USE_CACHE=use_cache
 
     for cur_ag in active_genes_files:
@@ -40,7 +44,8 @@ def main_domino():
         open(out_file, 'w+').write("\n".join(['[%s]' % ', '.join(list(m.nodes)) for m in G_final_modules]))
         print(f'{len(G_final_modules)} final modules are reported at {out_file}')
 
-        visualize_modules(os.path.splitext(cur_ag.split('/')[-1])[0], G_final_modules, None, network_file, report_folder)
+        if visualization:
+            visualize_modules(os.path.splitext(cur_ag.split('/')[-1])[0], G_final_modules, None, network_file, report_folder)
 
 def main_slicer():
 
