@@ -3,7 +3,7 @@ import numpy as np
 import multiprocessing
 
 USE_CACHE=True
-N_OF_THREADS=int(np.ceil(multiprocessing.cpu_count()*0.9))
+N_OF_THREADS=40 # int(np.ceil(multiprocessing.cpu_count()*0.9))
 dir_path = os.path.dirname(os.path.realpath(__file__))
 PATH_TO_CONF = "env/config/conf.json"
 

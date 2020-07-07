@@ -314,12 +314,6 @@ def get_final_modules(G, G_putative_modules):
                     + hypergeom.pmf(len(pertubed_nodes_in_cc), len(G.nodes), len(pertubed_nodes),
                                     len(cur_G_module.nodes))
 
-        if sig_score <= 0.05 / len(G_putative_modules):
-            module_sigs.append((cur_G_module, sig_score / len(G_putative_modules)))
-
-    module_sigs = sorted(module_sigs, key=lambda a: a[1])
-    return [a[0] for a in module_sigs]
-
 def main(active_genes_file, network_file, slices_file=None, slice_threshold=0.3, module_threshold=0.05, prize_factor=0.7, n_steps=20, n_permutations=1000):
     print("start running DOMINO...")
     if os.path.exists(f'{network_file}.pkl') and constants.USE_CACHE:
@@ -355,7 +349,7 @@ def main(active_genes_file, network_file, slices_file=None, slice_threshold=0.3,
         # print(f'analyze slicer #{i_cc+1}/{len(relevant_slices)}')
     p=multiprocessing.Pool(constants.N_OF_THREADS)
     putative_modules = reduce(lambda a, b: a+b, p.map(analyze_slice, params),[])
-    print(f"n putative_modules: {putative_modules}")
+    print(f"n putative_modules: {len(putative_modules)}")
     p.close()
     final_modules=get_final_modules(G, putative_modules)
     print(final_modules)

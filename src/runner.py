@@ -28,7 +28,7 @@ def main_domino():
     constants.USE_CACHE=use_cache
 
     for cur_ag in active_genes_files:
-        final_modules=domino_main(active_genes_file=cur_ag, network_file=network_file, slices_file=slices_file, slice_threshold=slice_threshold, module_threshold=module_threshold)
+        G_final_modules=domino_main(active_genes_file=cur_ag, network_file=network_file, slices_file=slices_file, slice_threshold=slice_threshold, module_threshold=module_threshold)
         activity_name=os.path.splitext(os.path.split(cur_ag)[-1])[0]
         report_folder=os.path.join(output_folder,activity_name)
         try:
@@ -37,10 +37,10 @@ def main_domino():
             pass
 
         out_file=os.path.join(report_folder, "modules.out")
-        open(out_file, 'w+').write("\n".join(['[%s]' % ', '.join(m) for m in final_modules]))
-        print(f'{len(final_modules)} final modules are reported at {out_file}')
+        open(out_file, 'w+').write("\n".join(['[%s]' % ', '.join(list(m.nodes)) for m in G_final_modules]))
+        print(f'{len(G_final_modules)} final modules are reported at {out_file}')
 
-        visualize_modules(os.path.splitext(cur_ag.split('/')[-1])[0], final_modules, None, network_file, report_folder)
+        visualize_modules(os.path.splitext(cur_ag.split('/')[-1])[0], G_final_modules, None, network_file, report_folder)
 
 def main_slicer():
 

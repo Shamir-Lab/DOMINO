@@ -132,7 +132,7 @@ def merge_two_dicts(x, y):
     z.update(y)
     return z
 
-def create_modules_output(modules, score_file_name):
+def create_modules_output(G_modules, score_file_name):
     scores=None
     if score_file_name is not None:
        print("score_file_name: {}".format(score_file_name))
@@ -142,21 +142,22 @@ def create_modules_output(modules, score_file_name):
        if constants.IS_PVAL_SCORES:
             scores["score"] = scores["pval"].apply(lambda x: -np.log10(x))
 
-    zero_scores = [ {"score" : 0, "id" : gene} for module in modules for gene in module if scores is None or gene not in scores.index]
+    zero_scores = [ {"score" : 0, "id" : gene} for G_module in G_modules for gene in G_module.nodes if scores is None or gene not in scores.index]
     if len(zero_scores) !=0:
         zero_scores = pd.DataFrame(zero_scores).set_index("id")
         zero_scores=zero_scores[~zero_scores.index.duplicated(keep='first')]
         scores = pd.concat([scores, zero_scores],axis=0)
-    return [merge_two_dicts({"id" : k}, v) for k,v in reduce(reduce_to_dict, [{"eid": gene, "modules": [i], "id": gene, "gene_symbol": e2g_convertor([gene])[0], "score" : float(scores.loc[gene,"score"])} for i, module in enumerate(modules) for gene in module],\
+    return [merge_two_dicts({"id" : k}, v) for k,v in reduce(reduce_to_dict, [{"eid": gene, "modules": [i], "id": gene, "gene_symbol": e2g_convertor([gene])[0], "score" : float(scores.loc[gene,"score"])} for i, G_module in enumerate(G_modules) for gene in G_module],\
             {}).items()]
 
-def draw_network(modules, score_file_name, network_file_name):
-    active_genes = [y for x in modules for y in x]
-    output = [{"data" : x, "label" : x["eid"], "selected" : True } for x in create_modules_output(modules, score_file_name)]
-    active_edges = [[x.iloc[0], x.iloc[2]] for i, x in pd.read_csv(network_file_name, sep="\t").iterrows() if x.iloc[0] in active_genes and x.iloc[2] in active_genes]
-    additional_edges = [[x.iloc[0], x.iloc[2]] for i, x in pd.read_csv(network_file_name, sep="\t").iterrows() if not (x.iloc[0] in active_genes and x.iloc[2] in active_genes) and (x.iloc[0] in active_genes or x.iloc[2] in active_genes)]
-    additional_nodes = [y for x in (active_edges + additional_edges) for y in x if y if y not in active_genes]
-    additional_nodes = list(set(additional_nodes))
+def draw_network(G_modules, score_file_name, network_file_name):
+    output = [{"data" : x, "label" : x["eid"], "selected" : True } for x in create_modules_output(G_modules, score_file_name)]
+    # active_genes = [y for x in G_modules for y in x.nodes]
+    active_edges = [y for x in G_modules for y in x.edges]
+    # active_edges = [[x.iloc[0], x.iloc[2]] for i, x in pd.read_csv(network_file_name, sep="\t").iterrows() if x.iloc[0] in active_genes and x.iloc[2] in active_genes]
+    additional_edges = [] # [[x.iloc[0], x.iloc[2]] for i, x in pd.read_csv(network_file_name, sep="\t").iterrows() if not (x.iloc[0] in active_genes and x.iloc[2] in active_genes) and (x.iloc[0] in active_genes or x.iloc[2] in active_genes)]
+    # additional_nodes = [] # [y for x in (active_edges + additional_edges) for y in x if y if y not in active_genes]
+    additional_nodes = [] # list(set(additional_nodes))
 
     return output + [{"data" : {"id" : x, "eid" : x, "modules" : []}, "label" : ""} for x in additional_nodes] + [{"data": {"id" : x[0]+"_"+x[1], "source":x[0], "target":x[1]}, "label" : ""} for x in additional_edges] + [{"data": {"id" : x[0]+"_"+x[1], "source":x[0], "target":x[1]}, "label" : "-"} for x in active_edges]
 
@@ -172,7 +173,7 @@ def generate_report_from_template(cy, output_base_dir, output_file_name):
     return "module_{}.html".format(output_file_name)
 
 
-def visualize_modules(dataset_name, modules, score_file_name, network_file_name, output_base_dir):
+def visualize_modules(dataset_name, G_modules, score_file_name, network_file_name, output_base_dir):
 
     if not os.path.exists(output_base_dir):
         os.makedirs(output_base_dir)
@@ -181,22 +182,23 @@ def visualize_modules(dataset_name, modules, score_file_name, network_file_name,
     modules_summary = manager.list()
 
     params=[]
-    for i, module in enumerate(modules):
-        params.append([i, module, score_file_name, network_file_name, dataset_name, modules_summary, output_base_dir])
+    for i, G_module in enumerate(G_modules):
+        params.append([i, G_module, score_file_name, network_file_name, dataset_name, modules_summary, output_base_dir])
     p=multiprocessing.Pool(constants.N_OF_THREADS)
     p.map(module_report, params)
     p.close()
-
+    # [module_report(p) for p in params]
 
 def module_report(params):
-    module_index, module, score_file_name, network_file_name, dataset_name, modules_summary, output_base_dir=params
+    module_index, G_module, score_file_name, network_file_name, dataset_name, modules_summary, output_base_dir=params
     print("visualize module {} for dataset {}".format(module_index, dataset_name))
 
-    modules_summary_row = {SH_MODULE_NAME: module_index, SH_NUM_GENES: len(module)}
-    cy = draw_network([module], score_file_name, network_file_name)
+    modules_summary_row = {SH_MODULE_NAME: module_index, SH_NUM_GENES: len(G_module.nodes)}
+    cy = draw_network([G_module], score_file_name, network_file_name)
 
     generate_report_from_template(cy, output_base_dir, str(module_index))
     if modules_summary is not None:
         modules_summary.append(modules_summary_row)
     return modules_summary
+
 
