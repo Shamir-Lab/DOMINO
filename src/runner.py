@@ -7,10 +7,10 @@ import src.constants as constants
 def main_domino():
 
     parser = argparse.ArgumentParser(description='args')
-    parser.add_argument('-a', '--active_genes_files', dest='active_genes_files', help='/path/to/active_genes_files_1,/path/to/active_genes_files_2', default="/media/hag007/Data/DOMINO_amit/brca.txt")
+    parser.add_argument('-a', '--active_genes_files', dest='active_genes_files', help='/path/to/active_genes_files_1,/path/to/active_genes_files_2', default="/media/hag007/Data/emp_test/true_solutions/scz_DOMINO/active_genes_file.txt")
     parser.add_argument('-o', '--output_folder', dest='output_folder', help='/path/to/output', default="/media/hag007/Data/domino_test/out_test/")
-    parser.add_argument('-n', '--network_file', dest='network_file', help='/path/to/network file', default="/media/hag007/Data/DOMINO_amit/network/dip.sif")
-    parser.add_argument('-s', '--slices_file', dest='slices_file', help='/path/to/slices file', default="/media/hag007/Data/DOMINO_amit/network/dip_sliced.txt")
+    parser.add_argument('-n', '--network_file', dest='network_file', help='/path/to/network file', default="/media/hag007/Data/bnet/networks/dip.sif")
+    parser.add_argument('-s', '--slices_file', dest='slices_file', help='/path/to/slices file', default="/media/hag007/Data/bnet/networks/dip_louvain_slices.txt")
     parser.add_argument('-c', '--use_cache', dest='use_cache', help='true', default="true")
     parser.add_argument('-p', '--parallelization', dest='parallelization', default="1")
     parser.add_argument('-v', '--visualization', dest='visualization', default="true")
@@ -51,8 +51,8 @@ def main_domino():
 def main_slicer():
 
     parser = argparse.ArgumentParser(description='args')
-    parser.add_argument('-n', '--network_file', dest='network_file', help='/path/to/network', default="/media/hag007/Data/bnet/networks/dip_reduced.sif")
-    parser.add_argument('-o', '--output_file', dest='output_file', default="/media/hag007/Data/bnet/networks/dip_sliced.txt", help='/path/to/output')
+    parser.add_argument('-n', '--network_file', dest='network_file', help='/path/to/network', default="/media/hag007/Data/bnet/networks/dip.sif")
+    parser.add_argument('-o', '--output_file', dest='output_file', default="/media/hag007/Data/bnet/networks/dip_slices.txt", help='/path/to/output')
 
 
     args = parser.parse_args()
