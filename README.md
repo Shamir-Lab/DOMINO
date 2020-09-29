@@ -42,7 +42,7 @@ python setup.py install --user
 
 To run preprocessing step 0 (partitioning network according Newman-Girvan algorithm):
 ```
-slicer --datasets </path/to/dataset1,/path/to/dataset2...> --output_dir <prefix of dataset>
+slicer --network_file </path/to/network.sif> --output_dir <prefix of dataset>
 ```
 
 To run DOMINO:
