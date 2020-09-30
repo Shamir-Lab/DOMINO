@@ -80,7 +80,7 @@ def prune_network_by_modularity(G, modules, cache_file):
 
     G_modules = p.map(create_subgraph, [m for m in modules])
     p.close()
-    print(f'{modules}')
+    # print(f'{modules}')
     print(f'# of modules after extraction: {len(G_modules)}')
     G_modularity = nx.algorithms.operators.union_all(G_modules)
     print(
@@ -241,8 +241,7 @@ def retain_relevant_slices(G_original, module_sig_th):
     print(f"number of slices: {len(list(ccs))}")
     for i_cur_cc, cur_cc in enumerate(ccs):
         pertubed_nodes_in_ccs.append(
-            len([cur_node for cur_node in cur_cc if G_modularity.nodes[cur_node]["pertubed_node"]]))
-    print([np.percentile(pertubed_nodes_in_ccs, 100 - a * 5, interpolation='higher') for a in np.arange(7)])
+            len([cur_node for cur_node in cur_cc if G_modularity.nodes[cur_node]["pertubed_node"]])) 
     perturbation_factor = min(0.7, (float(n_pertubed_nodes) / n_G_original) * (
                 1 + 100 / n_G_original ** 0.5))
 
@@ -259,7 +258,7 @@ def retain_relevant_slices(G_original, module_sig_th):
                                     is_sorted=False)
 
     # print(fdr_bh_results)
-    print(f'min: {min(list(fdr_bh_results[1]))}')
+    # print(f'min: {min(list(fdr_bh_results[1]))}')
     passed_modules = [cur_cc for cur_cc, is_passed_th in zip(large_modules, fdr_bh_results[0]) if is_passed_th]
     return nx.algorithms.operators.union_all(passed_modules) if len(passed_modules) > 0 else nx.Graph(), [list(m.nodes)
                                                                                                           for m in
@@ -361,5 +360,5 @@ def main(active_genes_file, network_file, slices_file=None, slice_threshold=0.3,
     print(f'n of putative modules: {len(putative_modules)}')
     final_modules = get_final_modules(G, putative_modules)
     print(
-        f'n of final modules: {len(final_modules)} {[len(list(m)) for m in final_modules]}')
+        f'n of final modules: {len(final_modules)} (n={[len(list(m)) for m in final_modules]})')
     return final_modules
