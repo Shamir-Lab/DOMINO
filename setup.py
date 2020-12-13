@@ -3,6 +3,7 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+
 setup(
     name='domino_hagai',
     version="0.1",
@@ -11,7 +12,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     description='DOMINO: Discovery of Modules In Networks using Omic',
-    url='https://github.com/hag007/DOMINO',
+    url='https://github.com/Shamir-Lab/DOMINO',
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "License :: OSI Approved :: MIT License",
@@ -27,15 +28,11 @@ setup(
         'pcst-fast==1.0.7',
         'statsmodels==0.11.0',
         'python-louvain==0.14'],
-    package_data = {'src':['data/*']},
-    include_package_data=True,
     entry_points = {
         "console_scripts": [
             "domino=src.runner:main_domino",
             "slicer=src.runner:main_slicer",
         ]
     }
-
-
 
 )

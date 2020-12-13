@@ -1,7 +1,13 @@
 /python
+/domino-env
+/domino_hagai.egg-info
 /.idea
 /build
 /dist
 /*.egg-info/
 *__pycache__*
+/examples/*
+!/examples/huri.sif
+!/examples/string.sif
+!/examples/tnfa_active_genes_file.txt
 *.swp
