@@ -44,7 +44,7 @@ def main_domino():
         out_file=os.path.join(report_folder, "modules.out")
         open(out_file, 'w+').write("\n".join(['[%s]' % ', '.join(list(m.nodes)) for m in G_final_modules]))
         print(f'{len(G_final_modules)} final modules are reported at {out_file}')
-
+        print(visualization)
         if visualization:
             visualize_modules(os.path.splitext(cur_ag.split('/')[-1])[0], G_final_modules, None, network_file, report_folder)
 

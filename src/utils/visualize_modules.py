@@ -174,7 +174,7 @@ def generate_report_from_template(cy, output_base_dir, output_file_name):
 
 
 def visualize_modules(dataset_name, G_modules, score_file_name, network_file_name, output_base_dir):
-
+    print("visualizing modules...")
     if not os.path.exists(output_base_dir):
         os.makedirs(output_base_dir)
 

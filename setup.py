@@ -9,8 +9,6 @@ setup(
     version="0.1",
     author="Hagai Levi",
     author_email="hagai.levi.007@gmail.com",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
     description='DOMINO: Discovery of Modules In Networks using Omic',
     url='https://github.com/Shamir-Lab/DOMINO',
     classifiers=[
@@ -19,6 +17,8 @@ setup(
         "Operating System :: Linux",
     ],
     packages = find_packages(),
+    package_data={'': ['*']},
+    include_package_data=True,
     install_requires=[
         'networkx==2.4',
         'matplotlib==3.1.3',
