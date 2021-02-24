@@ -34,7 +34,7 @@ Download the sources and install according to the following:
 DOMINO is written in Python3. The necessary libraries will all be installed by the `setup.py` script.
 We recommend using a virtual environment. For example, in Linux, before running `setup.py`:
 ```
-python -m venv domino-env
+python3 -m venv domino-env
 source domino-env/bin/activate
 ```
 To install, download and run setup.py:
