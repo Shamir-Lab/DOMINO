@@ -8,8 +8,6 @@ import pandas as pd
 import numpy as np
 import pickle
 import multiprocessing
-import matplotlib
-matplotlib.use("Agg")
 from scipy.stats import hypergeom
 from statsmodels.sandbox.stats.multicomp import fdrcorrection0
 
