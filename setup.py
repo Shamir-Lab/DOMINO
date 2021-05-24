@@ -21,7 +21,6 @@ setup(
     include_package_data=True,
     install_requires=[
         'networkx==2.4',
-        'matplotlib==3.1.3',
         'numpy==1.18.1',
         'scipy==1.4.1',
         'pandas==1.0.1',
