@@ -33,8 +33,8 @@ Download the sources and install according to the following:
 
 Clone the repo from Github:
 ```
-    git clone https://github.com/Shamir-Lab/DOMINO.git
-    cd DOMINO
+git clone https://github.com/Shamir-Lab/DOMINO.git
+cd DOMINO
 ```
 
 DOMINO is written in Python3. The necessary libraries will all be installed by the `setup.py` script.
@@ -45,7 +45,7 @@ source domino-env/bin/activate
 ```
 Then, run setup.py:
 ```
-        python setup.py install
+python setup.py install
 ```
 
 ## Input File Formats
