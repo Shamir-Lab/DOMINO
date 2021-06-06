@@ -31,21 +31,21 @@ DOMINO was tested under the following settings:
 ### From sources
 Download the sources and install according to the following:
 
+Clone the repo from Github:
+```
+    git clone https://github.com/Shamir-Lab/DOMINO.git
+    cd DOMINO
+```
+
 DOMINO is written in Python3. The necessary libraries will all be installed by the `setup.py` script.
 We recommend using a virtual environment. For example, in Linux, before running `setup.py`:
 ```
 python3 -m venv domino-env
 source domino-env/bin/activate
 ```
-To install, download and run setup.py:
+Then, run setup.py:
 ```
-    git clone https://github.com/Shamir-Lab/DOMINO.git
-    cd DOMINO
-    python setup.py install
-```
-It is possible to install as a user without root permissions:
-```
-python setup.py install --user
+        python setup.py install
 ```
 
 ## Input File Formats
