@@ -7,6 +7,8 @@
 /*.egg-info/
 *__pycache__*
 /examples/*
+/domino4web-env
+*.whl
 !/examples/huri.sif
 !/examples/string.sif
 !/examples/tnfa_active_genes_file.txt
