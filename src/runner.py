@@ -42,8 +42,11 @@ def main_domino():
             pass
 
         out_file=os.path.join(report_folder, "modules.out") 
-        if len(G_final_modules)!=0
+        if len(G_final_modules) !=0:
             open(out_file, 'w+').write("\n".join(['[%s]' % ', '.join(list(m.nodes)) for m in G_final_modules]))
+        else:
+            open(out_file, 'w+').write("")
+
         print(f'{len(G_final_modules)} final modules are reported at {out_file}')
         print(visualization)
         if visualization:
