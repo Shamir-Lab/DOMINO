@@ -3,6 +3,7 @@
 /domino_hagai.egg-info
 /.idea
 /build
+/config.js
 /dist
 /*.egg-info/
 *__pycache__*

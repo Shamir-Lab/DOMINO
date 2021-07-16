@@ -43,7 +43,7 @@ def main_domino():
 
         out_file=os.path.join(report_folder, "modules.out") 
         if len(G_final_modules) !=0:
-            open(out_file, 'w+').write("\n".join(['[%s]' % ', '.join(list(m.nodes)) for m in G_final_modules]))
+            open(out_file, 'w+').write("\n".join(['[%s]' % ', '.join(list(m.nodes)) for m in G_final_modules])+"\n")
         else:
             open(out_file, 'w+').write("")
 
