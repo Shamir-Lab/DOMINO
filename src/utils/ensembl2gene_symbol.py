@@ -62,7 +62,7 @@ def e2g_convertor(e_ids):
     global dict_type
     cur_dict_type=e_ids[0][:e_ids[0].index('0')]
     if g2e_dict is None or dict_type!=cur_dict_type:
-        e2g_dict = get_e2g_dictionary(cur_dict_type)
+        e2g_dict = get_e2g_dictionary("ENSG") # cur_dict_type)
 
     results = []
     for cur in e_ids:
