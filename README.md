@@ -84,7 +84,7 @@ The common command line options are:
 
 ## Advanced usage
 
-`-c/--use_cache`: Use auto-generated cache network files (*.pkl) if the same netwoerk supplied in previous executions. "NOTE: this option is set to "true" by default. However, if the content of the network file has changed between executions (i.e. w/o changing the name/directory), this option should be set to "false" for the first execution after the change. 
+`-c/--use_cache`: Use auto-generated cache network files (*.pkl) from previous executions with the same network. NOTE: (1) THIS IS NOT THE SLICES FILE! (2) If the content of the file has changed, you should set this option to "false"
 
 `-p/--parallelization`: The number of threads allocated to the run (usually single thread is enough)
 
