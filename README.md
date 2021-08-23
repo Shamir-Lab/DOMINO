@@ -61,13 +61,21 @@ Then, install domino via pip:
 pip install domino-python
 ```
 
-### From bioconda
+### From Bioconda
+
+Make sure the Bioconda repository and its dependencies are available:
+```
+conda config --add channels defaults
+conda config --add channels conda-forge 
+conda config --add channels bioconda
+```
 
 Create a virtual environment in conda. For example:
 ```
 python3 -m venv domino-env
 source domino-env/bin/activate
 ```
+
 Then, install domino via pip:
 ```
 conda install domino
