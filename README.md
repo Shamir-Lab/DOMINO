@@ -15,8 +15,8 @@ A preprint version of the study is available at https://www.biorxiv.org/content/
 - [Installation](#installation)
 - [Input File Formats](#input-file-formats)
 - [Basic Usage](#basic-usage)
-- [Main output files](#main-output-files)
 - [Advanced usage](#advanced-usage)
+- [Main output files](#main-output-files)
 - [Example files](#example-files)
 
 
@@ -68,6 +68,11 @@ To run preprocessing step 0 (partitioning network using Louvain algorithm):
 slicer --network_file </path/to/network.sif> --output_file </path/to/output_file>
 ```
 
+
+`-n/--network_file`: A path to network file (sif format). e.g., /path/to/network_file.sif.
+
+`-o/--output_file`: A path to the output slices file. e.g., /path/to/output/slices_file.txt, 
+
 To run DOMINO:
 ```
 domino --active_genes_files </path/to/dataset1,/path/to/dataset2...> --network_file </path/to/network.sif> --slices_file <slices_file.txt> --output_folder </path/to/output_folder> [-sth <slices_threshold> -mth <putative_modules_threshold>]
@@ -75,11 +80,24 @@ domino --active_genes_files </path/to/dataset1,/path/to/dataset2...> --network_f
 
 The common command line options are:
 
-`-a/--active_genes_files`: list of files of active genes. gene ids are Enseble id, separated by new line.
+`-a/--active_genes_files`: Comma delimited list of absolute paths to files, each containing a list of active genes, separated by a new line char (\n). e.g. /path/to/active_genes_files_1,/path/to/active_genes_files_2.
 
-`-n/--network_file`: path to network file (sif format).
+`-n/--network_file`: A path to network file (sif format). e.g., /path/to/network_file.sif.
 
-`-s/--slices_file`: path to slices file (i.e. the output of "slicer" script).
+`-s/--slices_file`: A path to slices file (i.e. the output of "slicer" script). e.g., /path/to/slices_file.txt, 
+
+
+## Advanced usage
+
+`-c/--use_cache`: Use auto-generated cache network files (*.pkl) from previous executions with the same network. NOTE: (1) THIS IS NOT THE SLICES FILE! (2) If the content of the file has changed, you should set this option to "false"
+
+`-p/--parallelization`: The number of threads allocated to the run (usually single thread is enough)
+
+`-v/--visualization`: Indicates whether a visualization of the modules ought to be generated 
+
+`-sth/--slices_threshold`: The threshold for considering a slice as relevant
+
+`-mth/--module_threshold`: The threshold for considering a putative module as final module.
 
 
 ## Main output files
@@ -87,11 +105,7 @@ The common command line options are:
 `output_folder/active_gene_file_name/modules.out`: list of final modules
 `output_folder/active_gene_file_name/module_i.html`: visualization of the i'th module
 
-## Advanced usage
 
-`-sth/--slices_threshold`: threshold for considering a slice as relevant
-
-`-mth/--module_threshold`: threshold for considering a putative module as final module.
 
 ## Example files
 
