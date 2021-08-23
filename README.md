@@ -28,8 +28,8 @@ DOMINO was tested under the following settings:
 
 ## Installation
 
-### From sources
-Download the sources and install according to the following:
+### From source
+Download the source files and install according to the following:
 
 Clone the repo from Github:
 ```
@@ -38,7 +38,7 @@ cd DOMINO
 ```
 
 DOMINO is written in Python3. The necessary libraries will all be installed by the `setup.py` script.
-We recommend using a virtual environment. For example, in Linux, before running `setup.py`:
+We recommend using a virtual environment. For example:
 ```
 python3 -m venv domino-env
 source domino-env/bin/activate
@@ -46,6 +46,31 @@ source domino-env/bin/activate
 Then, run setup.py:
 ```
 python setup.py install
+```
+
+### From pip
+
+We recommend using a virtual environment. For example:
+```
+conda create --name domino-env
+conda activate domino-env
+source domino-env/bin/activate
+```
+Then, install domino via pip:
+```
+pip install domino-python
+```
+
+### From bioconda
+
+Create a virtual environment in conda. For example:
+```
+python3 -m venv domino-env
+source domino-env/bin/activate
+```
+Then, install domino via pip:
+```
+conda install domino
 ```
 
 ## Input File Formats
