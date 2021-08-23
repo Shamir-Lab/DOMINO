@@ -303,7 +303,7 @@ def analyze_slice(params):
     return putative_modules_of_slice
 
 
-def get_final_modules(G, G_putative_modules):
+def get_final_modules(G, G_putative_modules, module_threshold):
     module_sigs = []
     for i_cur_module, cur_G_module in enumerate(G_putative_modules):
         pertubed_nodes_in_cc = [cur_node for cur_node in cur_G_module.nodes if G.nodes[cur_node]["pertubed_node"]]
@@ -314,7 +314,7 @@ def get_final_modules(G, G_putative_modules):
                     + hypergeom.pmf(len(pertubed_nodes_in_cc), len(G.nodes), len(pertubed_nodes),
                                     len(cur_G_module.nodes))
 
-        final_module_threshold = 0.05 / len(G_putative_modules)
+        final_module_threshold = module_threshold / len(G_putative_modules)
         if sig_score <= final_module_threshold:
             module_sigs.append((cur_G_module, sig_score / len(G_putative_modules)))
 
@@ -356,7 +356,7 @@ def main(active_genes_file, network_file, slices_file=None, slice_threshold=0.3,
     putative_modules = reduce(lambda a, b: a + b, p.map(analyze_slice, params), [])
     p.close()
     print(f'n of putative modules: {len(putative_modules)}')
-    final_modules = get_final_modules(G, putative_modules)
+    final_modules = get_final_modules(G, putative_modules, module_threshold)
     print(
         f'n of final modules: {len(final_modules)} (n={[len(list(m)) for m in final_modules]})')
     return final_modules

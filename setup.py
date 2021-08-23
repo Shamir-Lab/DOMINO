@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 
 setup(
-    name='domino_hagai',
+    name='domino-python',
     version="0.1",
     author="Hagai Levi",
     author_email="hagai.levi.007@gmail.com",
@@ -14,7 +14,7 @@ setup(
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: Linux",
+        "Operating System :: POSIX :: Linux",
     ],
     packages = find_packages(),
     package_data={'': ['*']},
