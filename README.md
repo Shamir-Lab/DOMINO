@@ -68,6 +68,11 @@ To run preprocessing step 0 (partitioning network using Louvain algorithm):
 slicer --network_file </path/to/network.sif> --output_file </path/to/output_file>
 ```
 
+
+`-n/--network_file`: A path to network file (sif format). e.g., /path/to/network_file.sif.
+
+`-o/--output_file`: A path to the output slices file. e.g., /path/to/output/slices_file.txt, 
+
 To run DOMINO:
 ```
 domino --active_genes_files </path/to/dataset1,/path/to/dataset2...> --network_file </path/to/network.sif> --slices_file <slices_file.txt> --output_folder </path/to/output_folder> [-sth <slices_threshold> -mth <putative_modules_threshold>]
