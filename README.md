@@ -61,7 +61,7 @@ Then, install domino via pip:
 pip install domino-python
 ```
 
-### From Bioconda
+### From conda (Bioconda)
 
 Make sure the Bioconda repository and its dependencies are available:
 ```
