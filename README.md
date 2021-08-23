@@ -75,7 +75,7 @@ domino --active_genes_files </path/to/dataset1,/path/to/dataset2...> --network_f
 
 The common command line options are:
 
-`-a/--active_genes_files`: Comma delimited list of absolute paths to files, each containing a list of active genes, separated by a new line char (\n). e.g. /path/to/active_genes_files_1,/path/to/active_genes_files_2. Examples @ https://github.com/Shamir-Lab/DOMINO/tree/master/examples.
+`-a/--active_genes_files`: Comma delimited list of absolute paths to files, each containing a list of active genes, separated by a new line char (\n). e.g. /path/to/active_genes_files_1,/path/to/active_genes_files_2.
 
 `-n/--network_file`: A path to network file (sif format). e.g., /path/to/network_file.sif.
 
