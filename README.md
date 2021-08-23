@@ -15,8 +15,8 @@ A preprint version of the study is available at https://www.biorxiv.org/content/
 - [Installation](#installation)
 - [Input File Formats](#input-file-formats)
 - [Basic Usage](#basic-usage)
-- [Main output files](#main-output-files)
 - [Advanced usage](#advanced-usage)
+- [Main output files](#main-output-files)
 - [Example files](#example-files)
 
 
@@ -75,11 +75,24 @@ domino --active_genes_files </path/to/dataset1,/path/to/dataset2...> --network_f
 
 The common command line options are:
 
-`-a/--active_genes_files`: list of files of active genes. gene ids are Enseble id, separated by new line.
+`-a/--active_genes_files`: Comma delimited list of absolute paths to files, each containing a list of active genes, separated by a new line char (\n). e.g. /path/to/active_genes_files_1,/path/to/active_genes_files_2. Examples @ https://github.com/Shamir-Lab/DOMINO/tree/master/examples.
 
-`-n/--network_file`: path to network file (sif format).
+`-n/--network_file`: A path to network file (sif format). e.g., /path/to/network_file.sif.
 
-`-s/--slices_file`: path to slices file (i.e. the output of "slicer" script).
+`-s/--slices_file`: A path to slices file (i.e. the output of "slicer" script). e.g., /path/to/slices_file.txt, 
+
+
+## Advanced usage
+
+`-c/--use_cache`: Use auto-generated cache network files (*.pkl) if the same netwoerk supplied in previous executions. "NOTE: this option is set to "true" by default. However, if the content of the network file has changed between executions (i.e. w/o changing the name/directory), this option should be set to "false" for the first execution after the change. 
+
+`-p/--parallelization`: The number of threads allocated to the run (usually single thread is enough)
+
+`-v/--visualization`: Indicates whether a visualization of the modules ought to be generated 
+
+`-sth/--slices_threshold`: The threshold for considering a slice as relevant
+
+`-mth/--module_threshold`: The threshold for considering a putative module as final module.
 
 
 ## Main output files
@@ -87,11 +100,7 @@ The common command line options are:
 `output_folder/active_gene_file_name/modules.out`: list of final modules
 `output_folder/active_gene_file_name/module_i.html`: visualization of the i'th module
 
-## Advanced usage
 
-`-sth/--slices_threshold`: threshold for considering a slice as relevant
-
-`-mth/--module_threshold`: threshold for considering a putative module as final module.
 
 ## Example files
 
