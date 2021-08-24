@@ -9,7 +9,7 @@ In extensive evaluation conducted on gene expression and genome-wide association
 
 In constrast, modules retrieved by DOMINO had high rate of empirically validated GO terms.
 
-A preprint version of the study is available at https://www.biorxiv.org/content/10.1101/2020.03.10.984963v3.
+The study is available at https://www.embopress.org/doi/full/10.15252/msb.20209593.
 
 - [Requirements](#requirements)
 - [Installation](#installation)
