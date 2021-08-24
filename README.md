@@ -35,8 +35,7 @@ DOMINO was tested under the following settings:
 
 We recommend using a virtual environment. For example:
 ```
-conda create --name domino-env
-conda activate domino-env
+python3 -m venv domino-env
 source domino-env/bin/activate
 ```
 Then, install domino via pip:
@@ -55,8 +54,8 @@ conda config --add channels bioconda
 
 Create a virtual environment in conda. For example:
 ```
-python3 -m venv domino-env
-source domino-env/bin/activate
+conda create --name domino-env
+conda activate domino-env
 ```
 
 Then, install domino via pip:
