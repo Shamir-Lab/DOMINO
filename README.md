@@ -13,6 +13,9 @@ A preprint version of the study is available at https://www.biorxiv.org/content/
 
 - [Requirements](#requirements)
 - [Installation](#installation)
+    - [From pip](#from-pip)
+    - [From conda](#from-conda-bioconda)
+    - [From source](#from-source)
 - [Input File Formats](#input-file-formats)
 - [Basic Usage](#basic-usage)
 - [Advanced usage](#advanced-usage)
@@ -27,26 +30,6 @@ DOMINO was tested under the following settings:
 - Linux OS (Ubuntu 14.04 LTS, Ubuntu 18.04.4 LTS)
 
 ## Installation
-
-### From source
-Download the source files and install according to the following:
-
-Clone the repo from Github:
-```
-git clone https://github.com/Shamir-Lab/DOMINO.git
-cd DOMINO
-```
-
-DOMINO is written in Python3. The necessary libraries will all be installed by the `setup.py` script.
-We recommend using a virtual environment. For example:
-```
-python3 -m venv domino-env
-source domino-env/bin/activate
-```
-Then, run setup.py:
-```
-python setup.py install
-```
 
 ### From pip
 
@@ -79,6 +62,26 @@ source domino-env/bin/activate
 Then, install domino via pip:
 ```
 conda install domino
+```
+
+### From source
+Download the source files and install according to the following:
+
+Clone the repo from Github:
+```
+git clone https://github.com/Shamir-Lab/DOMINO.git
+cd DOMINO
+```
+
+DOMINO is written in Python3. The necessary libraries will all be installed by the `setup.py` script.
+We recommend using a virtual environment. For example:
+```
+python3 -m venv domino-env
+source domino-env/bin/activate
+```
+Then, run setup.py:
+```
+python setup.py install
 ```
 
 ## Input File Formats
