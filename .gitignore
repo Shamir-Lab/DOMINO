@@ -12,5 +12,6 @@
 *.whl
 !/examples/huri.sif
 !/examples/string.sif
+!/examples/dip.sif
 !/examples/tnfa_active_genes_file.txt
 *.swp
