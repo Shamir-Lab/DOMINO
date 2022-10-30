@@ -6,16 +6,16 @@ from src.utils.visualize_modules import visualize_modules
 import src.constants as constants
 def main_domino():
 
-    parser = argparse.ArgumentParser(description='args')
-    parser.add_argument('-a', '--active_genes_files', dest='active_genes_files', help='/path/to/active_genes_files_1,/path/to/active_genes_files_2', default="examples/tnfa_active_genes_file.txt")
-    parser.add_argument('-o', '--output_folder', dest='output_folder', help='/path/to/output', default="examples/output")
-    parser.add_argument('-n', '--network_file', dest='network_file', help='/path/to/network file', default="examples/huri.sif")
-    parser.add_argument('-s', '--slices_file', dest='slices_file', help='/path/to/slices file', default="examples/huri_slices.txt")
-    parser.add_argument('-c', '--use_cache', dest='use_cache', help='true', default="true")
-    parser.add_argument('-p', '--parallelization', dest='parallelization', default="1")
-    parser.add_argument('-v', '--visualization', dest='visualization', default="true")
-    parser.add_argument('-sth', '--slice_threshold', dest='slice_threshold', default="0.3", help='threshold of slices')
-    parser.add_argument('-mth', '--module_threshold', dest='module_threshold', default="0.05", help='threshold of putative modules')
+    parser = argparse.ArgumentParser(description='DOMINO: An active module identification algorithm with reduce rate of false.\n NOTE YOU SHOULD RUN THE SLICES SCRIPT FIRST! (more info, type slicer -h) \n Example input files are available @ https://github.com/Shamir-Lab/DOMINO/tree/master/examples')
+    parser.add_argument('-a', '--active_genes_files', dest='active_genes_files', help='Comma delimited list of absolute paths to files, each containing a list of active genes, separated by a new line char (\\n). e.g. /path/to/active_genes_files_1,/path/to/active_genes_files_2.', default="examples/tnfa_active_genes_file.txt")
+    parser.add_argument('-n', '--network_file', dest='network_file', help='A path to network file (sif format). e.g. /path/to/network_file.sif', default="examples/huri.sif")
+    parser.add_argument('-s', '--slices_file', dest='slices_file', help='A path to slices file (i.e. the output of "slicer" script). e.g., /path/to/slices_file.txt', default="examples/huri_slices.txt")
+    parser.add_argument('-o', '--output_folder', dest='output_folder', help='A folder where output files will be written e.g., /path/to/output', default="examples/output")
+    parser.add_argument('-c', '--use_cache', dest='use_cache', help='Use auto-generated cache network files (*.pkl) from previous executions with the same network. NOTE: (1) THIS IS NOT THE SLICES FILE! (2) If the content of the file has changed, you should set this option to "false"', default="true")
+    parser.add_argument('-p', '--parallelization', dest='parallelization', help='The number of threads allocated to the run (usually single thread is enough)', default="1")
+    parser.add_argument('-v', '--visualization', dest='visualization', help='Indicates whether a visualization of the modules ought to be generated', default="true")
+    parser.add_argument('-sth', '--slice_threshold', dest='slice_threshold', default="0.3", help='The threshold for considering a slice as relevant')
+    parser.add_argument('-mth', '--module_threshold', dest='module_threshold', default="0.05", help='The threshold for considering a putative module as final module')
 
 
     args = parser.parse_args()
@@ -54,9 +54,9 @@ def main_domino():
 
 def main_slicer():
 
-    parser = argparse.ArgumentParser(description='args')
-    parser.add_argument('-n', '--network_file', dest='network_file', help='/path/to/network', default="examples/huri.sif")
-    parser.add_argument('-o', '--output_file', dest='output_file', default="examples/huri.sif", help='/path/to/output')
+    parser = argparse.ArgumentParser(description='Slicer for DOMINO (step #0): A preprocessing step for the network')
+    parser.add_argument('-n', '--network_file', dest='network_file', help='A path to network file (sif format). e.g. /path/to/network_file.sif', default="examples/huri.sif")
+    parser.add_argument('-o', '--output_file', dest='output_file', default="examples/huri.sif", help='A path to the output slices file. e.g., /path/to/output/slices_file.txt')
 
 
     args = parser.parse_args()

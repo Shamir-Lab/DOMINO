@@ -9,14 +9,17 @@ In extensive evaluation conducted on gene expression and genome-wide association
 
 In constrast, modules retrieved by DOMINO had high rate of empirically validated GO terms.
 
-A preprint version of the study is available at https://www.biorxiv.org/content/10.1101/2020.03.10.984963v3.
+The study is available at https://www.embopress.org/doi/full/10.15252/msb.20209593.
 
 - [Requirements](#requirements)
 - [Installation](#installation)
+    - [From pip](#from-pip)
+    - [From conda](#from-conda-bioconda)
+    - [From source](#from-source)
 - [Input File Formats](#input-file-formats)
 - [Basic Usage](#basic-usage)
-- [Main output files](#main-output-files)
 - [Advanced usage](#advanced-usage)
+- [Main output files](#main-output-files)
 - [Example files](#example-files)
 
 
@@ -28,8 +31,40 @@ DOMINO was tested under the following settings:
 
 ## Installation
 
-### From sources
-Download the sources and install according to the following:
+### From pip
+
+We recommend using a virtual environment. For example:
+```
+python3 -m venv domino-env
+source domino-env/bin/activate
+```
+Then, install domino via pip:
+```
+pip install domino-python
+```
+
+### From conda (Bioconda)
+
+Make sure the Bioconda repository and its dependencies are available:
+```
+conda config --add channels defaults
+conda config --add channels conda-forge 
+conda config --add channels bioconda
+```
+
+Create a virtual environment in conda. For example:
+```
+conda create --name domino-env
+conda activate domino-env
+```
+
+Then, install domino via pip:
+```
+conda install domino
+```
+
+### From source
+Download the source files and install according to the following:
 
 Clone the repo from Github:
 ```
@@ -38,7 +73,7 @@ cd DOMINO
 ```
 
 DOMINO is written in Python3. The necessary libraries will all be installed by the `setup.py` script.
-We recommend using a virtual environment. For example, in Linux, before running `setup.py`:
+We recommend using a virtual environment. For example:
 ```
 python3 -m venv domino-env
 source domino-env/bin/activate
@@ -68,6 +103,11 @@ To run preprocessing step 0 (partitioning network using Louvain algorithm):
 slicer --network_file </path/to/network.sif> --output_file </path/to/output_file>
 ```
 
+
+`-n/--network_file`: A path to network file (sif format). e.g., /path/to/network_file.sif.
+
+`-o/--output_file`: A path to the output slices file. e.g., /path/to/output/slices_file.txt, 
+
 To run DOMINO:
 ```
 domino --active_genes_files </path/to/dataset1,/path/to/dataset2...> --network_file </path/to/network.sif> --slices_file <slices_file.txt> --output_folder </path/to/output_folder> [-sth <slices_threshold> -mth <putative_modules_threshold>]
@@ -75,11 +115,24 @@ domino --active_genes_files </path/to/dataset1,/path/to/dataset2...> --network_f
 
 The common command line options are:
 
-`-a/--active_genes_files`: list of files of active genes. gene ids are Enseble id, separated by new line.
+`-a/--active_genes_files`: Comma delimited list of absolute paths to files, each containing a list of active genes, separated by a new line char (\n). e.g. /path/to/active_genes_files_1,/path/to/active_genes_files_2.
 
-`-n/--network_file`: path to network file (sif format).
+`-n/--network_file`: A path to network file (sif format). e.g., /path/to/network_file.sif.
 
-`-s/--slices_file`: path to slices file (i.e. the output of "slicer" script).
+`-s/--slices_file`: A path to slices file (i.e. the output of "slicer" script). e.g., /path/to/slices_file.txt, 
+
+
+## Advanced usage
+
+`-c/--use_cache`: Use auto-generated cache network files (*.pkl) from previous executions with the same network. NOTE: (1) THIS IS NOT THE SLICES FILE! (2) If the content of the file has changed, you should set this option to "false"
+
+`-p/--parallelization`: The number of threads allocated to the run (usually single thread is enough)
+
+`-v/--visualization`: Indicates whether a visualization of the modules ought to be generated 
+
+`-sth/--slices_threshold`: The threshold for considering a slice as relevant
+
+`-mth/--module_threshold`: The threshold for considering a putative module as final module.
 
 
 ## Main output files
@@ -87,11 +140,7 @@ The common command line options are:
 `output_folder/active_gene_file_name/modules.out`: list of final modules
 `output_folder/active_gene_file_name/module_i.html`: visualization of the i'th module
 
-## Advanced usage
 
-`-sth/--slices_threshold`: threshold for considering a slice as relevant
-
-`-mth/--module_threshold`: threshold for considering a putative module as final module.
 
 ## Example files
 
