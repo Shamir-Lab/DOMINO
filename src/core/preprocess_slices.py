@@ -4,11 +4,18 @@ import networkx as nx
 import pandas as pd
 import community as community_louvain
 import numpy as np
+import os 
 
 def create_slices(network_file, output_file_name, resolution=0.15):
-    df = pd.read_csv(network_file, sep='\t')
-    df.columns = ["node_1", "edge_type", "node_2"]
-    G = nx.from_pandas_edgelist(df, 'node_1', 'node_2')
+
+    if os.path.splitext(network_file)[1]==".sif":
+        df = pd.read_csv(network_file, sep='\t')
+        df.columns = ["node_1", "edge_type", "node_2"]
+        G = nx.from_pandas_edgelist(df, 'node_1', 'node_2')
+   
+    else:
+        G = nx.read_edgelist(network_file)
+    
 
     partition = community_louvain.best_partition(G, resolution=resolution, random_state=1)  # 0.1
     prt = {k: [] for k in np.arange(len(np.unique(list(partition.values()))))}
