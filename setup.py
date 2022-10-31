@@ -21,11 +21,11 @@ setup(
     include_package_data=True,
     install_requires=[
         'networkx==2.4',
-        'numpy==1.19.0',
-        'scipy==1.4.1',
-        'pandas==1.0.1',
+        'numpy==1.22.0',
+        'scipy==1.9.3',
+        'pandas==1.5.1',
         'pcst-fast==1.0.7',
-        'statsmodels==0.11.0',
+        'statsmodels==0.13.0',
         'python-louvain==0.14'],
     entry_points = {
         "console_scripts": [
