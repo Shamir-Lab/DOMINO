@@ -25,7 +25,7 @@ setup(
         'scipy==1.9.3',
         'pandas==1.5.1',
         'pcst-fast==1.0.7',
-        'statsmodels==0.13.0',
+        'statsmodels==0.11.0',
         'python-louvain==0.14'],
     entry_points = {
         "console_scripts": [
