@@ -26,7 +26,7 @@ The study is available at https://www.embopress.org/doi/full/10.15252/msb.202095
 
 ## Requirements
 DOMINO was tested under the following settings:
-- Python 3.6, Python 3.7 (Note that for further versions of python some dependency packages are currently not available via pip)
+- Python 3.8 (Note that for further versions of python some dependency packages are currently not available via pip)
 - Linux OS (Ubuntu 14.04 LTS, Ubuntu 18.04.4 LTS)
 
 ## Installation
